@@ -30,6 +30,33 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
+    <!-- 🔥 INTEGRAÇÃO FIREBASE (BANCO DE DADOS) 🔥 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBm2igSyudmBIm4USxddX0tyNsuSbKIoZQ",
+            authDomain: "eli-sorvetes.firebaseapp.com",
+            projectId: "eli-sorvetes",
+            storageBucket: "eli-sorvetes.firebasestorage.app",
+            messagingSenderId: "981678261976",
+            appId: "1:981678261976:web:299dbd24847b64447f79ad"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Exportando para a nossa lógica de UI
+        window.firebaseDB = db;
+        window.firebaseCollection = collection;
+        window.firebaseAddDoc = addDoc;
+        window.firebaseGetDocs = getDocs;
+        window.firebaseDoc = doc;
+        window.firebaseSetDoc = setDoc;
+        window.firebaseTimestamp = serverTimestamp;
+    </script>
+
     <style>
         :root {
             --color-pink: #FF4D7A;
@@ -46,7 +73,6 @@
             background-color: #222;
         }
 
-        /* Fundo Dinâmico com Blur */
         body::before {
             content: '';
             position: fixed;
@@ -59,7 +85,6 @@
 
         h1, h2, h3, .brand-font { font-family: 'Fredoka', sans-serif; }
 
-        /* Glassmorphism */
         .glass-panel { background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(12px); border-radius: 20px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.6); }
         .item-card { transition: all 0.2s ease; border-bottom: 1px solid #f0f0f0; }
         .item-card:last-child { border-bottom: none; }
@@ -67,13 +92,10 @@
 
         .nav-pill.active { background-color: #FF4D7A; color: white; box-shadow: 0 4px 10px rgba(255, 77, 122, 0.3); transform: scale(1.05); border-color: transparent !important; }
 
-        /* Animations */
         @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0px); } }
         .animate-float { animation: float 3s ease-in-out infinite; }
         @keyframes popup { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         .popup-enter { animation: popup 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pulse-ring { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
-        .btn-pulse { animation: pulse-ring 2s infinite; }
         @keyframes slideInDown { from { transform: translate(-50%, -100%); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
         .toast-enter { animation: slideInDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
@@ -89,7 +111,6 @@
         .badge-zero { background: #E0F2FE; color: #0284C7; border: 1px solid #BAE6FD; }
         .badge-vegan { background: #DCFCE7; color: #166534; border: 1px solid #BBF7D0; }
 
-        /* Custom Scrollbar for Options Modal */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
@@ -105,7 +126,7 @@
         </div>
         <h1 class="text-3xl font-bold text-white drop-shadow-sm brand-font">Eli Sorvetes & Espetaria</h1>
         
-        <button id="install-btn" onclick="installApp()" class="flex mt-3 mx-auto bg-white text-pink-600 px-4 py-2 rounded-full text-xs font-bold shadow-lg items-center gap-2 transform active:scale-95 transition-all btn-pulse">
+        <button id="install-btn" onclick="installApp()" class="flex mt-3 mx-auto bg-white text-pink-600 px-4 py-2 rounded-full text-xs font-bold shadow-lg items-center gap-2 transform active:scale-95 transition-all">
             <i class="fas fa-download"></i> Baixar App
         </button>
     </div>
@@ -114,7 +135,7 @@
     <div class="pt-2 pb-2 px-4 relative z-10">
         <div class="flex overflow-x-auto gap-3 no-scrollbar carousel-container pb-2">
             
-            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-prato').scrollIntoView({behavior:'smooth'})">
+            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-prato')?.scrollIntoView({behavior:'smooth'})">
                 <div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://i.postimg.cc/Wh0KCPh3/banner.jpg');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-black/30"></div>
                 <div class="relative z-10">
@@ -124,7 +145,7 @@
                 </div>
             </div>
 
-            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-leite').scrollIntoView({behavior:'smooth'})">
+            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-leite')?.scrollIntoView({behavior:'smooth'})">
                 <div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://i.postimg.cc/ThJrpRN2/banner.jpg');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-black/30"></div>
                 <div class="relative z-10">
@@ -134,7 +155,7 @@
                 </div>
             </div>
 
-            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-milkshake').scrollIntoView({behavior:'smooth'})">
+            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-milkshake')?.scrollIntoView({behavior:'smooth'})">
                 <div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://images.unsplash.com/photo-1572490122747-3968b75cc699?auto=format&fit=crop&w=500&q=80');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-black/30"></div>
                 <div class="relative z-10">
@@ -144,7 +165,7 @@
                 </div>
             </div>
 
-            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-bebidas').scrollIntoView({behavior:'smooth'})">
+            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-bebidas')?.scrollIntoView({behavior:'smooth'})">
                 <div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=500&q=80');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-black/30"></div>
                 <div class="relative z-10">
@@ -154,7 +175,7 @@
                 </div>
             </div>
 
-            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-molhos').scrollIntoView({behavior:'smooth'})">
+            <div class="carousel-slide flex-shrink-0 w-[85%] sm:w-[300px] h-32 rounded-2xl shadow-lg relative overflow-hidden flex items-center p-4 text-white bg-gray-900 group cursor-pointer" onclick="document.getElementById('cat-molhos')?.scrollIntoView({behavior:'smooth'})">
                 <div class="absolute inset-0 bg-cover bg-center opacity-70 group-hover:scale-105 transition-transform duration-500" style="background-image: url('https://images.pexels.com/photos/34318136/pexels-photo-34318136.jpeg');"></div>
                 <div class="absolute inset-0 bg-gradient-to-r from-black/90 to-black/30"></div>
                 <div class="relative z-10">
@@ -182,7 +203,7 @@
                     <p id="review-text" class="text-gray-500 text-[11px] italic review-ticker mt-0.5 h-4 overflow-hidden">"A melhor paleta de Pistache!" - Mariana</p>
                 </div>
                 
-                <div class="flex items-center gap-1.5 text-[11px] font-bold text-green-700 bg-green-100 px-2.5 py-1 rounded-full shadow-inner border border-green-200 animate-pulse">
+                <div class="flex items-center gap-1.5 text-[11px] font-bold text-green-700 bg-green-100 px-2.5 py-1 rounded-full shadow-inner border border-green-200">
                     <i class="far fa-clock"></i> Entrega: ~35 min
                 </div>
             </div>
@@ -208,6 +229,9 @@
     </div>
 
     <!-- MAIN MENU LIST -->
+    <div id="loading-indicator" class="text-center py-10 text-white font-medium text-sm hidden">
+        <i class="fas fa-circle-notch fa-spin mr-2"></i> Carregando cardápio...
+    </div>
     <main id="menu-container" class="container mx-auto px-4 mt-6 space-y-6 pb-6"></main>
 
     <!-- RODAPÉ INSTITUCIONAL -->
@@ -254,7 +278,6 @@
                 <h3 class="font-bold text-xl text-gray-800 brand-font pr-6" id="options-title">Personalize o seu item</h3>
                 <p class="text-xs text-gray-500 mt-1" id="options-subtitle">Como prefere?</p>
             </div>
-            <!-- Div com scroll para suportar muitos sabores (ex: Milkshakes) -->
             <div id="options-body" class="space-y-2 mb-4 overflow-y-auto custom-scrollbar pr-1 flex-1"></div>
             <button onclick="confirmOptions()" class="w-full bg-pink-500 text-white font-bold py-3.5 rounded-xl shadow-lg hover:bg-pink-600 active:scale-95 transition-transform flex items-center justify-center gap-2 mt-auto shrink-0">
                 <i class="fas fa-check"></i> Adicionar à Sacola
@@ -396,19 +419,12 @@
             "display": "standalone",
             "background_color": "#FF4D7A",
             "theme_color": "#FF4D7A",
-            "icons": [{
-                "src": "https://i.postimg.cc/S2f08FCJ/logo.jpg",
-                "sizes": "512x512",
-                "type": "image/jpeg",
-                "purpose": "any maskable"
-            }]
+            "icons": [{ "src": "https://i.postimg.cc/S2f08FCJ/logo.jpg", "sizes": "512x512", "type": "image/jpeg", "purpose": "any maskable" }]
         };
         const manifestBlob = new Blob([JSON.stringify(manifestData)], {type: 'application/manifest+json'});
-        const manifestURL = URL.createObjectURL(manifestBlob);
-        document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="manifest" href="${manifestURL}">`);
+        document.querySelector('head').insertAdjacentHTML('beforeend', `<link rel="manifest" href="${URL.createObjectURL(manifestBlob)}">`);
 
-
-        // --- CONSTANTES & DADOS ---
+        // --- CONSTANTES ---
         const PHONE_NUMBER = "5519995980541";
         const TAXA_ENTREGA = 8.00;
         const MIN_ENTREGA = 25.00;
@@ -417,79 +433,107 @@
         let scheduleMode = 'now';
         let tipAmount = 0;
         let pendingItemForOptions = null;
+        let menuData = []; // O cardápio agora começa vazio e será preenchido pelo Firebase
 
-        const menuData = [
-            { type: 'divider', id: 'divider-food', title: '🍽️ Para Matar a Fome' },
-            { id: 'prato', title: 'Prato da Casa', icon: 'fas fa-utensils', color: 'text-red-600', description: 'Arroz, Feijão tropeiro, Vinagrete + 1 Espeto', price: 22.00, items: ['Prato (Carne Bovina)', 'Prato (Frango)', 'Prato (Linguiça Mista)', 'Prato (Coração)', 'Prato (Pão de Alho)'], crossSell: 'food' },
-            { id: 'espetinhos', title: 'Espetinhos na Brasa', icon: 'fas fa-fire-burner', color: 'text-orange-600', crossSell: 'food', complexItems: [
+        // Este é o "Cardápio Semente" que vai ser enviado automaticamente para o seu Firebase
+        const hardcodedMenu = [
+            { order: 0, type: 'divider', id: 'divider-food', title: '🍽️ Para Matar a Fome' },
+            { order: 1, id: 'prato', title: 'Prato da Casa', icon: 'fas fa-utensils', color: 'text-red-600', description: 'Arroz, Feijão tropeiro, Vinagrete + 1 Espeto', price: 22.00, items: ['Prato (Carne Bovina)', 'Prato (Frango)', 'Prato (Linguiça Mista)', 'Prato (Coração)', 'Prato (Pão de Alho)'], crossSell: 'food' },
+            { order: 2, id: 'espetinhos', title: 'Espetinhos na Brasa', icon: 'fas fa-fire-burner', color: 'text-orange-600', crossSell: 'food', complexItems: [
                 { name: 'Carne Bovina', price: 10.00, options: 'meat' }, { name: 'Medalhão', price: 12.00, options: 'meat' },
                 { name: 'Frango', price: 10.00 }, { name: 'Linguiça Mista', price: 10.00 }, { name: 'Coração', price: 10.00 }, { name: 'Pão de Alho', price: 10.00 }, { name: 'Queijo Coalho', price: 12.00 }
             ]},
-            { id: 'porcoes', title: 'Porções Extras', icon: 'fas fa-bowl-food', color: 'text-yellow-600', complexItems: [{ name: 'Arroz', price: 4.00 }, { name: 'Feijão Gordo', price: 5.00 }, { name: 'Feijão Tropeiro', price: 5.00 }, { name: 'Farofa', price: 2.00 }, { name: 'Vinagrete', price: 3.00 }, { name: 'Mandioca Frita (300g)', price: 15.00 }, { name: 'Batata Frita (300g)', price: 15.00 }] },
-            { id: 'molhos', title: 'Molhos', icon: 'fas fa-droplet', color: 'text-red-500', price: 3.00, items: ['Alho', 'Verde', 'Barbecue', 'Azeitonas', 'Mostarda com Mel', 'Rosé', 'Mostarda', 'Ketchup', 'Maionese'] },
-            { id: 'bebidas', title: 'Sucos & Refrigerantes', icon: 'fas fa-glass-water', color: 'text-cyan-500', complexItems: [
+            { order: 3, id: 'porcoes', title: 'Porções Extras', icon: 'fas fa-bowl-food', color: 'text-yellow-600', complexItems: [{ name: 'Arroz', price: 4.00 }, { name: 'Feijão Gordo', price: 5.00 }, { name: 'Feijão Tropeiro', price: 5.00 }, { name: 'Farofa', price: 2.00 }, { name: 'Vinagrete', price: 3.00 }, { name: 'Mandioca Frita (300g)', price: 15.00 }, { name: 'Batata Frita (300g)', price: 15.00 }] },
+            { order: 4, id: 'molhos', title: 'Molhos', icon: 'fas fa-droplet', color: 'text-red-500', price: 3.00, items: ['Alho', 'Verde', 'Barbecue', 'Azeitonas', 'Mostarda com Mel', 'Rosé', 'Mostarda', 'Ketchup', 'Maionese'] },
+            { order: 5, id: 'bebidas', title: 'Sucos & Refrigerantes', icon: 'fas fa-glass-water', color: 'text-cyan-500', complexItems: [
                 { name: 'Suco Laranja 500ml', price: 12.00, badges: ['natural'] }, { name: 'Água de Coco', price: 12.00, badges: ['natural'] }, 
                 { name: 'Refri Lata 350ml', price: 7.00, desc: 'Sprite, Coca, Fanta, Guaraná', options: 'drink' }, 
                 { name: 'Coca-Cola 2L', price: 17.00 }, { name: 'Fanta Laranja 2L', price: 17.00 }, { name: 'Coca-Cola 600ml', price: 8.00 }, 
                 { name: 'Água Mineral 510ml', price: 3.50 }, { name: 'Monster Lata', price: 12.00, options: 'drink' }
             ]},
             
-            { type: 'divider', id: 'divider-icecream', title: '🍦 Hora da Sobremesa' },
-            { id: 'paletas', title: 'Paletas Especiais', icon: 'fas fa-star', color: 'text-pink-500', price: 9.00, items: ['Bombom de Coco', 'Leitinho Black', 'Leitinho Trufado', 'Pistache', 'Bombom Branco', 'Bombonello'] },
-            { id: 'zero', title: 'Linha Zero Açúcar', icon: 'fas fa-leaf', color: 'text-green-500', subcategories: [
+            { order: 6, type: 'divider', id: 'divider-icecream', title: '🍦 Hora da Sobremesa' },
+            { order: 7, id: 'paletas', title: 'Paletas Especiais', icon: 'fas fa-star', color: 'text-pink-500', price: 9.00, items: ['Bombom de Coco', 'Leitinho Black', 'Leitinho Trufado', 'Pistache', 'Bombom Branco', 'Bombonello'] },
+            { order: 8, id: 'zero', title: 'Linha Zero Açúcar', icon: 'fas fa-leaf', color: 'text-green-500', subcategories: [
                 { name: 'Picolé Zero', price: 7.00, items: ['Coco Branco', 'Chocolate'], badges: ['zero'] }, 
                 { name: 'Massa Zero', price: 13.99, items: ['Morango', 'Flocos'], badges: ['zero'], crossSell: 'cobertura' },
                 { name: 'Pote 650g Zero', price: 49.90, items: ['Morango', 'Chocolate', 'Açaí'], badges: ['zero'], crossSell: 'cobertura' }
             ]},
-            { id: 'leite', title: 'Picolés ao Leite', icon: 'fas fa-cow', color: 'text-blue-500', price: 2.50, promo: 'Acima de 10 unid. R$ 2,00/cada', items: ['Limão Suíço', 'Chocolate Branco', 'Coco Branco', 'Ninho', 'Flocos'] },
+            { order: 9, id: 'leite', title: 'Picolés ao Leite', icon: 'fas fa-cow', color: 'text-blue-500', price: 2.50, promo: 'Acima de 10 unid. R$ 2,00/cada', items: ['Limão Suíço', 'Chocolate Branco', 'Coco Branco', 'Ninho', 'Flocos'] },
             
-            // INTEGRAÇÃO DOS SABORES DE MILK-SHAKE VIA OPÇÕES
-            { id: 'milkshake', title: 'Milk-Shakes Tradicionais', icon: 'fas fa-blender', color: 'text-purple-500', description: 'Escolha o tamanho e o sabor (mais de 20 opções).', complexItems: [
+            { order: 10, id: 'milkshake', title: 'Milk-Shakes Tradicionais', icon: 'fas fa-blender', color: 'text-purple-500', description: 'Escolha o tamanho e o sabor.', complexItems: [
                 { name: 'Milk-Shake 300ml', price: 14.00, options: 'milkshake_flavor' }, 
                 { name: 'Milk-Shake 400ml', price: 16.00, options: 'milkshake_flavor' },
                 { name: 'Milk-Shake 500ml', price: 18.00, options: 'milkshake_flavor' }
             ]},
-            
-            { id: 'coberturas', title: 'Coberturas (300g)', icon: 'fas fa-wine-bottle', color: 'text-red-800', price: 10.00, items: ['Caramelo', 'Morango', 'Chocolate'] }
+            { order: 11, id: 'coberturas', title: 'Coberturas (300g)', icon: 'fas fa-wine-bottle', color: 'text-red-800', price: 10.00, items: ['Caramelo', 'Morango', 'Chocolate'] }
         ];
 
-        // --- ARRANQUE ---
-        function init() {
-            renderMenu(); 
-            setupSearch();
-            setupScrollSpy();
+        // --- SISTEMA DE MIGRAÇÃO E LEITURA DO FIREBASE (CMS) ---
+        function checkFirebaseReady() {
+            if (window.firebaseDB && window.firebaseGetDocs) {
+                loadMenuFromFirebase();
+            } else {
+                setTimeout(checkFirebaseReady, 50); // Fica tentando até o Firebase carregar
+            }
+        }
+
+        async function loadMenuFromFirebase() {
+            document.getElementById('loading-indicator').classList.remove('hidden');
+            try {
+                // Tenta puxar o cardápio da nuvem
+                const querySnapshot = await window.firebaseGetDocs(window.firebaseCollection(window.firebaseDB, "cardapio"));
+                
+                if (querySnapshot.empty) {
+                    console.log("Nuvem vazia. Injetando o cardápio inicial pela primeira vez...");
+                    menuData = hardcodedMenu;
+                    renderMenu();
+                    
+                    // Injeção Automática no Firebase para você não precisar digitar nada
+                    for(let item of hardcodedMenu) {
+                        const docId = item.id || 'sec-' + Math.random().toString(36).substr(2, 9);
+                        await window.firebaseSetDoc(window.firebaseDoc(window.firebaseDB, "cardapio", docId), item);
+                    }
+                    console.log("Cardápio migrado com sucesso para o Firebase!");
+                } else {
+                    console.log("Lendo cardápio direto do Firebase...");
+                    menuData = [];
+                    querySnapshot.forEach((doc) => {
+                        menuData.push(doc.data());
+                    });
+                    // Ordena pela ordem correta da tela
+                    menuData.sort((a, b) => a.order - b.order);
+                    renderMenu();
+                }
+            } catch (error) {
+                console.error("Falha ao ler o Firebase. Usando cardápio de segurança offline.", error);
+                menuData = hardcodedMenu;
+                renderMenu();
+            } finally {
+                document.getElementById('loading-indicator').classList.add('hidden');
+                setupScrollSpy();
+                setupSearch();
+            }
+        }
+
+        // Inicia o sistema
+        document.addEventListener("DOMContentLoaded", () => {
             startReviewsTicker();
+            checkFirebaseReady();
 
             const savedCart = localStorage.getItem('eliSorvetesCart');
             if (savedCart) { 
-                cart = JSON.parse(savedCart); 
-                updateCartUI(); 
-                if(cart.length > 0) {
-                    setTimeout(() => showToast('Chefe, o seu carrinho ainda tem itens. Quer finalizar?'), 1500);
-                }
+                cart = JSON.parse(savedCart); updateCartUI(); 
+                if(cart.length > 0) setTimeout(() => showToast('Tem itens no seu carrinho. Quer finalizar?'), 1500);
             }
             if(localStorage.getItem('eliNome')) document.getElementById('input-name').value = localStorage.getItem('eliNome');
-        }
+        });
 
         // --- PROVA SOCIAL TICKER ---
         function startReviewsTicker() {
-            const reviews = [
-                '"A melhor paleta de Pistache!" - Mariana',
-                '"Carne no ponto perfeito, recomendo." - João P.',
-                '"Chegou quente e super rápido." - Roberto',
-                '"O Milk-shake é surreal de bom!" - Ana C.',
-                '"A espetaria salvou o nosso jantar." - Marcos T.'
-            ];
-            let idx = 0;
-            const el = document.getElementById('review-text');
-            setInterval(() => {
-                el.style.opacity = 0;
-                setTimeout(() => {
-                    idx = (idx + 1) % reviews.length;
-                    el.textContent = reviews[idx];
-                    el.style.opacity = 1;
-                }, 500);
-            }, 4000);
+            const reviews = ['"A melhor paleta de Pistache!" - Mariana', '"Carne no ponto perfeito, recomendo." - João P.', '"Chegou quente e super rápido." - Roberto', '"O Milk-shake é surreal de bom!" - Ana C.', '"A espetaria salvou o nosso jantar." - Marcos T.'];
+            let idx = 0; const el = document.getElementById('review-text');
+            setInterval(() => { el.style.opacity = 0; setTimeout(() => { idx = (idx + 1) % reviews.length; el.textContent = reviews[idx]; el.style.opacity = 1; }, 500); }, 4000);
         }
 
         // --- RENDERIZAÇÃO DA EMENTA ---
@@ -522,15 +566,18 @@
                 let itemsHtml = '';
                 const renderItem = (name, price, desc = '', crossSell = false, options = false, badges = []) => {
                     let badgesHtml = '';
-                    if(badges.includes('zero')) badgesHtml = `<span class="badge-zero ml-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wide">Zero Açúcar</span>`;
-                    if(badges.includes('natural')) badgesHtml = `<span class="badge-vegan ml-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wide"><i class="fas fa-leaf"></i> Natural</span>`;
+                    if(badges && badges.includes('zero')) badgesHtml = `<span class="badge-zero ml-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wide">Zero Açúcar</span>`;
+                    if(badges && badges.includes('natural')) badgesHtml = `<span class="badge-vegan ml-2 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wide"><i class="fas fa-leaf"></i> Natural</span>`;
+
+                    // Formata preço para o caso de vir quebrado da nuvem
+                    const formattedPrice = typeof price === 'number' ? price.toFixed(2).replace('.', ',') : price;
 
                     return `
                     <div class="item-card py-3 flex justify-between items-center group menu-item" data-name="${name.toLowerCase()}">
                         <div class="pr-2 flex-1">
                             <h4 class="font-medium text-gray-800 text-sm flex items-center flex-wrap">${name} ${badgesHtml}</h4>
                             ${desc ? `<p class="text-[10px] text-gray-400 leading-tight mt-0.5">${desc}</p>` : ''}
-                            <p class="text-xs text-gray-600 font-bold mt-1">R$ ${price.toFixed(2).replace('.', ',')}</p>
+                            <p class="text-xs text-gray-600 font-bold mt-1">R$ ${formattedPrice}</p>
                         </div>
                         <button onclick="handleAddToCartClick('${cat.id}', '${name}', ${price}, '${crossSell || ''}', '${options || ''}')" class="w-8 h-8 flex-shrink-0 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 text-pink-500 border border-gray-200 flex items-center justify-center shadow-sm active:scale-90 transition-transform"><i class="fas fa-plus text-xs"></i></button>
                     </div>`;
@@ -554,32 +601,8 @@
                 pendingItemForOptions = { catId, name, price, crossSellType };
                 openOptionsModal('A sua Bebida', [{ label: 'Copos c/ Gelo e Limão', value: 'C/ Gelo e Limão' }, { label: 'Apenas a Bebida (Gelada)', value: 'Sem copo', checked: true }]);
             } else if (optionsType === 'milkshake_flavor') {
-                // Lógica incorporada para a lista gigante de sabores
                 pendingItemForOptions = { catId, name, price, crossSellType };
-                openOptionsModal('Sabor do Milk-Shake', [
-                    { label: 'Abacaxi', value: 'Abacaxi', checked: true },
-                    { label: 'Abacaxi ao vinho', value: 'Abacaxi ao vinho' },
-                    { label: 'Coco branco', value: 'Coco branco' },
-                    { label: 'Coco com abóbora', value: 'Coco com abóbora' },
-                    { label: 'Chocomenta', value: 'Chocomenta' },
-                    { label: 'Chocolate', value: 'Chocolate' },
-                    { label: 'Café com cacau', value: 'Café com cacau' },
-                    { label: 'Céu azul', value: 'Céu azul' },
-                    { label: 'Chocomaltine c/ avelã', value: 'Chocomaltine c/ avelã' },
-                    { label: 'Ninho trufado', value: 'Ninho trufado' },
-                    { label: 'Ninho Rocher', value: 'Ninho Rocher' },
-                    { label: 'Ninho c/ morango', value: 'Ninho c/ morango' },
-                    { label: 'Flocos', value: 'Flocos' },
-                    { label: 'Milho verde', value: 'Milho verde' },
-                    { label: 'Nutella', value: 'Nutella' },
-                    { label: 'Laka', value: 'Laka' },
-                    { label: 'Morango', value: 'Morango' },
-                    { label: 'Maracujá', value: 'Maracujá' },
-                    { label: 'Mousse de limão', value: 'Mousse de limão' },
-                    { label: 'Prestígio', value: 'Prestígio' },
-                    { label: 'Pistache', value: 'Pistache' },
-                    { label: 'Paçoca c/ Nutella', value: 'Paçoca c/ Nutella' }
-                ]);
+                openOptionsModal('Sabor do Milk-Shake', [{ label: 'Abacaxi', value: 'Abacaxi', checked: true }, { label: 'Abacaxi ao vinho', value: 'Abacaxi ao vinho' }, { label: 'Coco branco', value: 'Coco branco' }, { label: 'Coco com abóbora', value: 'Coco com abóbora' }, { label: 'Chocomenta', value: 'Chocomenta' }, { label: 'Chocolate', value: 'Chocolate' }, { label: 'Café com cacau', value: 'Café com cacau' }, { label: 'Céu azul', value: 'Céu azul' }, { label: 'Chocomaltine c/ avelã', value: 'Chocomaltine c/ avelã' }, { label: 'Ninho trufado', value: 'Ninho trufado' }, { label: 'Ninho Rocher', value: 'Ninho Rocher' }, { label: 'Ninho c/ morango', value: 'Ninho c/ morango' }, { label: 'Flocos', value: 'Flocos' }, { label: 'Milho verde', value: 'Milho verde' }, { label: 'Nutella', value: 'Nutella' }, { label: 'Laka', value: 'Laka' }, { label: 'Morango', value: 'Morango' }, { label: 'Maracujá', value: 'Maracujá' }, { label: 'Mousse de limão', value: 'Mousse de limão' }, { label: 'Prestígio', value: 'Prestígio' }, { label: 'Pistache', value: 'Pistache' }, { label: 'Paçoca c/ Nutella', value: 'Paçoca c/ Nutella' }]);
             } else { processAddToCart(catId, name, price, crossSellType); }
         }
 
@@ -597,18 +620,14 @@
         function confirmOptions() {
             if(!pendingItemForOptions) return;
             const selectedOpt = document.querySelector('input[name="item_option"]:checked').value;
-            // Se for Milkshake, a formatação muda ligeiramente para ficar mais elegante
-            const finalName = pendingItemForOptions.name.includes('Milk-Shake') ? 
-                `${pendingItemForOptions.name} (${selectedOpt})` : 
-                `${pendingItemForOptions.name} (${selectedOpt})`;
-
+            const finalName = `${pendingItemForOptions.name} (${selectedOpt})`;
             processAddToCart(pendingItemForOptions.catId, finalName, pendingItemForOptions.price, pendingItemForOptions.crossSellType);
             closeOptionsModal();
         }
 
         function processAddToCart(catId, name, price, crossSellType) {
             const existing = cart.find(i => i.name === name);
-            if (existing) existing.qty++; else cart.push({ catId, name, price, qty: 1 });
+            if (existing) existing.qty++; else cart.push({ catId, name, price: Number(price), qty: 1 });
             updateCartUI();
             showToast(`${name.split(' (')[0]} adicionado!`);
             
@@ -683,28 +702,15 @@
         // --- INTERAÇÕES UI ---
         function setScheduleMode(mode) {
             scheduleMode = mode;
-            if(mode === 'now') {
-                document.getElementById('btn-sched-now').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all bg-white text-pink-600 shadow-sm';
-                document.getElementById('btn-sched-later').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all text-gray-500 bg-transparent';
-                document.getElementById('schedule-time-container').classList.add('hidden');
-            } else {
-                document.getElementById('btn-sched-later').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all bg-white text-pink-600 shadow-sm';
-                document.getElementById('btn-sched-now').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all text-gray-500 bg-transparent';
-                document.getElementById('schedule-time-container').classList.remove('hidden');
-            }
+            if(mode === 'now') { document.getElementById('btn-sched-now').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all bg-white text-pink-600 shadow-sm'; document.getElementById('btn-sched-later').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all text-gray-500 bg-transparent'; document.getElementById('schedule-time-container').classList.add('hidden');
+            } else { document.getElementById('btn-sched-later').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all bg-white text-pink-600 shadow-sm'; document.getElementById('btn-sched-now').className = 'flex-1 py-2 rounded-lg text-xs font-bold transition-all text-gray-500 bg-transparent'; document.getElementById('schedule-time-container').classList.remove('hidden'); }
         }
 
         function setDeliveryMode(mode) { deliveryMode = mode; const btnRet = document.getElementById('btn-retirada'), btnEnt = document.getElementById('btn-entrega'), fields = document.getElementById('delivery-fields'); if (mode === 'retirada') { btnRet.className = 'flex-1 py-2 rounded-lg text-sm font-bold transition-all bg-white text-pink-600 shadow-sm ring-1 ring-gray-100'; btnEnt.className = 'flex-1 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 bg-transparent'; fields.classList.add('hidden'); } else { btnEnt.className = 'flex-1 py-2 rounded-lg text-sm font-bold transition-all bg-white text-pink-600 shadow-sm ring-1 ring-gray-100'; btnRet.className = 'flex-1 py-2 rounded-lg text-sm font-bold transition-all text-gray-400 bg-transparent'; fields.classList.remove('hidden'); } updateCartUI(); }
         function toggleChangeField() { const method = document.querySelector('input[name="payment"]:checked').value; const field = document.getElementById('change-field'); if (method === 'money') field.classList.remove('hidden'); else field.classList.add('hidden'); }
         function toggleCart() { const modal = document.getElementById('cart-modal'), drawer = document.getElementById('cart-drawer'); if (modal.classList.contains('hidden')) { modal.classList.remove('hidden'); setTimeout(() => { drawer.classList.remove('translate-y-full'); modal.querySelector('.bg-black\\/60').classList.remove('opacity-0'); }, 10); document.body.style.overflow = 'hidden'; } else { drawer.classList.add('translate-y-full'); modal.querySelector('.bg-black\\/60').classList.add('opacity-0'); setTimeout(() => { modal.classList.add('hidden'); document.body.style.overflow = ''; }, 300); } }
         
-        function showToast(msg) { 
-            const toast = document.getElementById('toast'); 
-            document.getElementById('toast-msg').textContent = msg; 
-            toast.classList.remove('opacity-0', '-translate-y-full');
-            toast.classList.add('toast-enter');
-            setTimeout(() => { toast.classList.remove('toast-enter'); toast.classList.add('opacity-0', '-translate-y-full'); }, 2500); 
-        }
+        function showToast(msg) { const toast = document.getElementById('toast'); document.getElementById('toast-msg').textContent = msg; toast.classList.remove('opacity-0', '-translate-y-full'); toast.classList.add('toast-enter'); setTimeout(() => { toast.classList.remove('toast-enter'); toast.classList.add('opacity-0', '-translate-y-full'); }, 2500); }
 
         function setupScrollSpy() {
             const sections = document.querySelectorAll('.menu-category, [id^="divider-"]'); const navPills = document.querySelectorAll('.nav-pill');
@@ -726,19 +732,20 @@
             cart.forEach(i => subtotalItens += i.price * i.qty);
             let totalLiquido = subtotalItens - discount;
 
-            let addressInfo = '';
+            let addressInfo = '', rawAddress = 'Recolha no Balcão';
             if (deliveryMode === 'entrega') {
                 if (totalLiquido < MIN_ENTREGA) { alert(`Mínimo para entrega: R$ ${MIN_ENTREGA.toFixed(2).replace('.', ',')}.`); return; }
                 const rua = document.getElementById('input-address').value, num = document.getElementById('input-number').value, bairro = document.getElementById('input-district').value, ref = document.getElementById('input-ref').value;
                 if (!rua || !num || !bairro) { alert('Morada incompleta (Rua, Nº, Bairro).'); return; }
-                addressInfo = `📍 *ENTREGA (Taxa R$ 8,00):*\n${rua}, ${num} - ${bairro}\n${ref ? `Ref: ${ref}` : ''}`;
+                rawAddress = `${rua}, ${num} - ${bairro} ${ref ? `(Ref: ${ref})` : ''}`;
+                addressInfo = `📍 *ENTREGA (Taxa R$ 8,00):*\n${rawAddress}`;
             } else { addressInfo = `👜 *RECOLHA NO BALCÃO*`; }
 
-            let timeInfo = '*Para Agora*';
+            let timeInfo = '*Para Agora*', rawTime = 'Agora';
             if(scheduleMode === 'later') {
                 const timeStr = document.getElementById('input-schedule-time').value;
                 if(!timeStr) { alert('Por favor, informe o horário desejado.'); return; }
-                timeInfo = `*AGENDADO PARA AS ${timeStr}*`;
+                rawTime = timeStr; timeInfo = `*AGENDADO PARA AS ${timeStr}*`;
             }
 
             const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
@@ -755,44 +762,34 @@
             const totalStr = document.getElementById('cart-total').textContent;
             msg += `\n\n💰 *TOTAL A PAGAR: ${totalStr}*\n--------------------------\n${addressInfo}\n--------------------------\n📝 Pagamento: ${paymentInfo}`;
             
+            // Grava o pedido para manter histórico e previsibilidade, sem travar o WhatsApp se a net falhar
+            if(window.firebaseAddDoc) {
+                try {
+                    window.firebaseAddDoc(window.firebaseCollection(window.firebaseDB, "pedidos_recebidos"), { cliente: name, total: totalStr, data: new Date().toISOString() });
+                } catch(e) {}
+            }
+
             localStorage.removeItem('eliSorvetesCart');
             window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        // --- INSTALAÇÃO PWA (ANDROID E IOS) ---
+        // --- INSTALAÇÃO PWA ---
         let deferredPrompt;
         const installBtn = document.getElementById('install-btn');
         const isIos = /iPhone|iPad|iPod/.test(navigator.userAgent);
         const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
 
-        if (isIos && !isInStandaloneMode) { 
-            installBtn.classList.remove('hidden'); installBtn.classList.add('flex'); 
-        } else if (!isIos && !isInStandaloneMode) {
-            installBtn.classList.remove('hidden'); installBtn.classList.add('flex');
-            window.addEventListener('beforeinstallprompt', (e) => { 
-                e.preventDefault(); 
-                deferredPrompt = e; 
-            }); 
-        }
+        if (isIos && !isInStandaloneMode) { installBtn.classList.remove('hidden'); installBtn.classList.add('flex'); } 
+        else if (!isIos && !isInStandaloneMode) { installBtn.classList.remove('hidden'); installBtn.classList.add('flex'); window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; }); }
 
         function installApp() {
-            if (isIos) { 
-                document.getElementById('ios-install-modal').classList.remove('hidden'); 
-            } else if (deferredPrompt) { 
-                deferredPrompt.prompt(); 
-                deferredPrompt.userChoice.then((choiceResult) => { 
-                    if (choiceResult.outcome === 'accepted') { installBtn.classList.add('hidden'); } 
-                    deferredPrompt = null; 
-                }); 
-            } else { 
-                document.getElementById('android-install-modal').classList.remove('hidden');
-            }
+            if (isIos) { document.getElementById('ios-install-modal').classList.remove('hidden'); } 
+            else if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then((choiceResult) => { if (choiceResult.outcome === 'accepted') { installBtn.classList.add('hidden'); } deferredPrompt = null; }); } 
+            else { document.getElementById('android-install-modal').classList.remove('hidden'); }
         }
         
         function closeIosInstall() { document.getElementById('ios-install-modal').classList.add('hidden'); }
         function closeAndroidInstall() { document.getElementById('android-install-modal').classList.add('hidden'); }
-
-        init();
     </script>
 </body>
 </html>
